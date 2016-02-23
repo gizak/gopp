@@ -4,6 +4,7 @@ import (
 	"github.com/gizak/gopp/plugin/ptype"
 	"io"
 	"os/exec"
+	//_ "github.com/maruel/panicparse"
 )
 
 var info = ptype.PluginInfo{

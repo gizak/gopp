@@ -32,8 +32,8 @@ func installPlugins(list PList) error {
 
 		cmd := exec.Command("go", "get", p.Uri)
 		log.Println("LOAD plugin: " + p.Plugin)
-
-		if err := cmd.Run(); err != nil {
+		if b, err := cmd.CombinedOutput(); err != nil {
+			fmt.Fprint(os.Stderr, string(b))
 			return err
 		}
 	}
@@ -112,16 +112,6 @@ func buildPlugins(list PList) error {
 		return err
 	}
 
-	/*
-		cmd := exec.Command("go", "install", "github.com/gizak/gopp/plugin")
-
-		log.Println("BUILD batch plugins")
-
-		if out, err := cmd.CombinedOutput(); err != nil {
-			log.Printf("error: %s\n", out)
-			return err
-		}
-	*/
 	return nil
 }
 
@@ -170,7 +160,7 @@ func Install(list PList) error {
 }
 
 func InstallWithConfig(fpath string) error {
-	log.SetPrefix("> [install]\t")
+	log.SetPrefix("➧ [install]\t")
 
 	log.Println("READ config: " + fpath)
 	data, err := ioutil.ReadFile(fpath)

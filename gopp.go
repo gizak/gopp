@@ -8,7 +8,7 @@ import (
 
 func main() {
 	if err := cmd.Run(); err != nil {
-		fmt.Println(err)
+		fmt.Fprintf(os.Stderr, "gopp: %s", err.Error())
 		os.Exit(1)
 	}
 }
