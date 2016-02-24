@@ -21,6 +21,10 @@ func (cmdPlugin) Usage() string {
 	return ""
 }
 
+func (cmdPlugin) Descrip() string {
+	return "manage gopp plugins"
+}
+
 func (cp cmdPlugin) RunSubcmd(args []string) error {
 	cp.FlagSet = flag.NewFlagSet("plugin", flag.ContinueOnError)
 	//cp.FlagSet.Usage = func() { fmt.Print(cp.Usage()) }

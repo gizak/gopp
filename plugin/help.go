@@ -1,15 +1,19 @@
-package goplugin
+package plugin
 
 import (
+	"bytes"
 	"fmt"
+	"github.com/gizak/gopp/plugin/ptype"
 	"os/exec"
+	"text/template"
 )
 
-type help struct {
-	text string
+type cmdHelp struct {
+	tmpl    string
+	Subcmds map[string]ptype.SubcmdRunner
 }
 
-var PLUGIN = help{`Go is a tool for managing Go source code.
+var pCmdHelp = cmdHelp{tmpl: `Go is a tool for managing Go source code.
 
 This is the gopp version of go command with some additional features.
 Vanilla go commands are expecting to work as usual.
@@ -18,7 +22,7 @@ Usage:
 
 	gopp command [arguments]
 
-The commands are:
+The original go commands are:
 
 	build       compile packages and dependencies
 	clean       remove object files
@@ -38,6 +42,11 @@ The commands are:
 	version     print Go version
 	vet         run go tool vet on packages
 
+The additional gopp commands are:
+
+{{ range $i, $p := .Subcmds -}}
+{{ printf "\t%-12s%s\n" $p.Subcmd $p.Descrip }}
+{{- end }}
 Use "go help [command]" for more information about a command.
 
 Additional help topics:
@@ -55,39 +64,38 @@ Additional help topics:
 Use "gopp help [topic]" for more information about that topic.
 `}
 
-func (p help) Subcmd() string {
+func (p cmdHelp) Subcmd() string {
 	return "help"
 }
 
-func (p help) Usage() string {
-	return p.text
+func (p cmdHelp) Descrip() string {
+	return "provide commands/plugins help info"
 }
 
-var cmds = []string{
-	"plugin",
-	"rm",
+func (p cmdHelp) Usage() string {
+	p.Subcmds = SubcmdRunners
+	t, err := template.New("help").Parse(p.tmpl)
+	if err != nil {
+		panic(err)
+	}
+
+	var buf bytes.Buffer
+	err = t.Execute(&buf, p)
+
+	return buf.String()
 }
 
-func (p help) RunSubcmd(args []string) error {
+func (p cmdHelp) RunSubcmd(args []string) error {
 	if len(args) == 1 {
-		fmt.Print(p.text)
+		fmt.Print(p.Usage())
 		return nil
 	}
 
 	cmd := args[1]
-	has := false
 
-	for _, c := range cmds {
-		if c == cmd {
-			has = true
-			break
-		}
-	}
-
-	if has {
-		b, err := exec.Command("gopp", args[1], "--help").CombinedOutput()
-		fmt.Print(string(b))
-		return err
+	if p, ok := SubcmdRunners[cmd]; ok {
+		fmt.Print(p.Usage())
+		return nil
 	}
 
 	// original go cmds will fall through

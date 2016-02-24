@@ -13,11 +13,7 @@ var defCfg = PList{
 	{
 		Plugin: "parsepanic",
 		Uri:    "github.com/gizak/gopp/plugin/parsepanic",
-		Deps:   []string{"github.com/maruel/panicparse"}},
-	{
-		Plugin: "cmdhelp",
-		Uri:    "github.com/gizak/gopp/plugin/help"},
-}
+		Deps:   []string{"github.com/maruel/panicparse"}}}
 
 var ConfigFile = os.Getenv("HOME") + "/.gopp"
 

@@ -11,7 +11,9 @@ type PluginEntry struct {
 	Uri    string
 }
 
-var Plugins = []PluginEntry{{Name: "plugin", Plugin: PLUGIN, Uri: "github.com/gizak/gopp/plugin"}}
+var Plugins = []PluginEntry{
+	{Name: "plugin", Plugin: PLUGIN, Uri: "github.com/gizak/gopp/plugin"},
+	{Name: "cmdhelp", Plugin: pCmdHelp, Uri: "github.com/gizak/gopp/plugin"}}
 
 type PListEntry struct {
 	Plugin string
