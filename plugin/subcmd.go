@@ -38,7 +38,7 @@ func (cp cmdPlugin) RunSubcmd(args []string) error {
 
 	if *isupdate {
 		SetLogOutput(os.Stdout)
-		if err := InstallWithConfig(os.Getenv("HOME") + "/.gopp"); err != nil {
+		if err := InstallWithConfig(); err != nil {
 			return err
 		}
 	}

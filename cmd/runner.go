@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"bytes"
+	"fmt"
 	"io"
 	"os"
 	"os/exec"
@@ -16,7 +17,12 @@ func Run() error {
 	}
 
 	plugin.Init()
-	//plugin.SetLogOutput(os.Stdout)
+
+	if subcmd == "" {
+		b, err := exec.Command("gopp", "help").CombinedOutput()
+		fmt.Print(string(b))
+		return err
+	}
 
 	// plugin added command
 	if runner, ok := plugin.SubcmdRunners[subcmd]; ok {
@@ -37,11 +43,6 @@ func Run() error {
 			lastr = &b
 			nextw = &b
 
-			/*
-				lastr, nextw = io.Pipe()
-				lastr = bufio.NewReader(lastr)
-				nextw = bufio.NewWriter(nextw)
-			*/
 			if i == 0 {
 				lastr = combpipe
 			}

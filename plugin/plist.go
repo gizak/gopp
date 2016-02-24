@@ -16,6 +16,7 @@ var Plugins = []PluginEntry{{Name: "plugin", Plugin: PLUGIN, Uri: "github.com/gi
 type PListEntry struct {
 	Plugin string
 	Uri    string
+	Deps   []string
 }
 
 type PList []PListEntry

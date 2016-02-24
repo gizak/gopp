@@ -15,7 +15,6 @@ import (
 	"strconv"
 
 	"golang.org/x/tools/go/loader"
-	"gopkg.in/yaml.v2"
 )
 
 func cleanPlugins() error {
@@ -159,19 +158,19 @@ func Install(list PList) error {
 	return nil
 }
 
-func InstallWithConfig(fpath string) error {
+func InstallWithConfig() error {
+	fpath := ConfigFile
+	pl, err := cfg()
+
 	log.SetPrefix("➧ [install]\t")
-
-	log.Println("READ config: " + fpath)
-	data, err := ioutil.ReadFile(fpath)
-	if err != nil {
-		return err
+	if os.IsNotExist(err) {
+		log.Println("READ config: no " + fpath + " found, use default config")
+	} else {
+		log.Println("READ config: " + fpath)
+		if err != nil && err != os.ErrNotExist {
+			return err
+		}
 	}
 
-	cfg := Config{}
-	if err := yaml.Unmarshal(data, &cfg); err != nil {
-		return err
-	}
-
-	return Install(cfg.Plugins)
+	return Install(pl)
 }
