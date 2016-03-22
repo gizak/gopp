@@ -34,9 +34,9 @@ func (cp cmdPlugin) RunSubcmd(args []string) error {
 	cp.Parse(args[1:])
 
 	if *islist {
-		fmt.Println("Plugin List:")
-		for i, p := range Plugins {
-			fmt.Printf("%d %s\t%s\n", i, p.Name, p.Uri)
+		fmt.Print("The installed plugins:\n\n")
+		for _, p := range Plugins {
+			fmt.Printf("\t%-12s%s\n", p.Name, p.Uri)
 		}
 	}
 
